@@ -203,3 +203,40 @@ try {
     return $e->getMessage(); // "Sorry, this voucher doesn't thing.";
 }
 ```
+
+### Kitchen Sink
+This shows how to get vouchers from the subscriptions api, take a requested voucher, validate it and the claim it on the API.
+
+```
+$api = new Discovery\Subscriptions\Api();
+$api->setApiKey(getenv("SUBS_API_KEY"));
+$api->setAppId(getenv("SUBS_APP_ID"));
+
+$vouchers = $api->getAllVouchers();
+
+$bag = new Vouchers\Bag();
+$bag->map($vouchers, function($voucher) {
+    return new Vouchers\Voucher($voucher);
+});
+
+# Add some validators
+$bag->validator(function ($voucher) {
+    return $voucher->owner == "Eurosport";
+}, "Sorry, this voucher was not valid.");
+
+$bag->validator(function ($voucher) {
+    return !$voucher->used;
+}, "Sorry, this voucher has been used.");
+
+$bag->validator(function ($voucher) {
+    return new DateTime($voucher->valid_till) < new DateTime();
+}, "Sorry, this voucher is expired.");
+
+try {
+    $voucher = $collection->validate(filter_val(INPUT_POST, "voucher_code", FILTER_SANITIZE_STRING));
+    $voucher->set("used", true // not really needed.
+    $api->putVoucherClaim($voucher); // because this takes care of it.
+} catch (\Vouchers\Exceptions\VoucherNotValid $e) {
+    echo $e->getMessage();
+}
+```
