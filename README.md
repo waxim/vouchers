@@ -207,7 +207,7 @@ try {
 ### Kitchen Sink
 This shows how to get vouchers from the subscriptions api, take a requested voucher, validate it and the claim it on the API.
 
-```
+```php
 $api = new Discovery\Subscriptions\Api();
 $api->setApiKey(getenv("SUBS_API_KEY"));
 $api->setAppId(getenv("SUBS_APP_ID"));
