@@ -1,165 +1,205 @@
-# Voucher Generation & Validation
-Generate vouchers and check them.
+# Vouchers Lib
+A PHP lib for generating and validating vouchers. We make no assumptions about storage and instead offer the concept of "bags" which can take any number of `Vouchers` on creating. Then all group work is performed against these bags.
 
-# Kitchen Sink
-
-Generate any voucher
-
+## Example
 ```php
-$voucher = new Discovery\Vouchers\Voucher();
-print $voucher; // DFHS-JERJ-KILP-SDSA
-```
 
-Seed existing vouchers, get new one.
-
-```php
-$bag = new Discovery\Vouchers\Bag();
-foreach ($vouchers as $voucher) {
-    $bag->add(new Discovery\Vouchers\Voucher($voucher));
-}
-
-$voucher = new Discovery\Vouchers\Voucher(null, $bag);
-print $voucher // UNIQ-VOUC-HERM-ADEO
-```
-or you can ask the bag for a new one.
-
-```php
-$voucher = $bag->create();
-print $voucher // UNIQ-VOUC-HERM-ADEO
-
-```
-
-Pick a voucher from the bag
-
-```php
-$bag = new Discovery\Vouchers\Bag();
-foreach ($vouchers as $voucher) {
-    $bag->add(new Discovery\Vouchers\Voucher($voucher));
-}
-
-$voucher = $bag->pick() // picks any random voucher
-```
-
-You can also pass a callback to pick to "validate" its selection.
-
-```php
-$voucher = $bag->pick(function($voucher){
-    return $voucher->used !== true;
-});
-```
-
-If the bag has validators, you can ask pick to check those too.
-
-```php
-$voucher = $bag->pickValid();
-```
-
-If you have a voucher code you want to validate.
-
-```php
-$bag = new Discovery\Vouchers\Bag();
-foreach ($vouchers as $voucher) {
-    $bag->add(new Discovery\Vouchers\Voucher($voucher));
-}
-
-$bag->validate("DFHS-JERJ-KILP-SDSA");
-```
-
-You can add additional validators as a callback that account `$voucher`
-
-```php
-$bag = new Discovery\Vouchers\Bag();
-foreach ($vouchers as $voucher) {
-    $bag->add(new Discovery\Vouchers\Voucher($voucher));
-}
-
-// A validation to check voucher isn't expired.
-$bag->validator(function($voucher){
-    return new DateTime($voucher->expires) > new DateTime();
-}, "Sorry, that voucher has expired");
-
-
-$bag->validate("DFHS-JERJ-KILP-SDSA");
-
-```
-
-If you wish you can pass values to validate that will be passed to all subsiquent validators.
-
-```php
-$bag = new Discovery\Vouchers\Bag();
-foreach ($vouchers as $voucher) {
-    $bag->add(new Discovery\Vouchers\Voucher($voucher));
-}
-
-// A validation to check voucher isn't expired.
-$bag->validator(function($voucher, $user){
-    return $voucher->user == $user->id;
-}, "Sorry, this voucher does not belong to you.");
-
-$bag->validate("DFHS-JERJ-KILP-SDSA", $user);
-
-```
-
-You can update most of the values for vouchers in bags.
-
-```php
-$bag = new Discovery\Vouchers\Bag();
-foreach ($vouchers as $voucher) {
-    $bag->add(new Discovery\Vouchers\Voucher($voucher));
-}
-
-$voucher = $bag->pick() // picks any random voucher
-
-$voucher->set("used", true);
-```
-
-Bags are itterable as well. So getting bag information back out is easy.
-
-```php
-foreach ($bag as $voucher) {
-    // save $voucher to a db?
-}
-```
-
-You can also set options for voucher attributes on a bag.
-
-```php
-$model = new Discovery\Vouchers\Voucher\Model([
-    'code' => [
-        'required'  => true,
-        'immutable' => true
+$model = new Vouchers\Voucher\Model([
+    'owner' => [
+        'required' => true
     ],
-    'assigned' => [
+    'claimed_by' => [
         'required' => true,
-        'default'   => function() { return DateTime(); }
+        'default'  => "Unclaimed"
     ],
-    'used' => [
-        'required' => true,
-        'default'   => false
+    'claimed_on' => [
+        'default' => function() { return new DateTime(); }
     ]
 ]);
 
-$bag = new Discovery\Vouchers\Bag($model);
-```
-Any attribute called `code` will be required and immutable by default. Anything immutable will not be editable by `set()` however as the object is not protected direct overriding is possible.
+$collection = new Vouchers\Bag($model);
+$collection->fill(1000);
 
-Optionally you can pass a model as the 3rd option to a plain voucher, the model will then only apply to said voucher.
+$voucher = $collection->pick();
 
-```php
-$voucher = new Discovery\Vouchers\Voucher(null, null, $model);
+print $voucher; // FHUW-JSUJ-KSIQ-JDUI
 ```
 
-Fill an empty bag.
+## Vouchers
+Vouchers can take on almost any form, however you can use `Vouchers\Voucher\Model` to enforce validation and structure. The only required attribute is `code` which by default is immutable.
 
-```php
-$bag = new Discovery\Vouchers\Bag($model);
-$bag->fill(1000);
+```
+$voucher = new Vouchers\Voucher();
+print $voucher; // ABCD-EFGH-IJKL
+```
 
-$csv = fopen('vouchers.csv', 'w');
+You may also pass an array to the voucher to set pre existing values to the voucher. Matching fields (including `code`) will be validated.
 
-foreach ($bag as $voucher) {
-    fputcsv($csv, $voucher);
+```
+$voucher = new Voucher(['code' => 'ALAN-COLE-CODE', 'claimed_by' => '', 'claimed_on' => '']);
+print $voucher; // "ALAN-COLE-CODE"
+```
+
+### Model
+By creating a model you can set default values and validation on vouchers created or loaded. See `Vouchers\Voucher\Validation` for a full list of options. A model is passed as an array to `Vouchers\Voucher\Model`
+
+```
+$model = new Vouchers\Voucher\Model([
+    'owner' => [
+        'required' => true
+    ],
+    'claimed_by' => [
+        'required' => true,
+        'default'  => "Unclaimed"
+    ],
+    'claimed_on' => [
+        'default' => function() { return new DateTime(); }
+    ]
+]);
+```
+
+Vouchers attrbiutes can be updated using `set` and `get`
+
+```
+$voucher->set('owner', 'Alan');
+echo $voucher->get('owner'); // Alan
+```
+
+### Code
+You can change the way the code is generated by settings generator on a model. A generator must implement `Vouchers\Voucher\Code\Generator`
+
+```
+namespace My\Voucher\Generator;
+
+use Vouchers\Voucher\Code\Generator as Generator;
+
+class MyCode implements Generator
+{
+    public function part()
+    {
+        return bin2hex(openssl_random_pseudo_bytes(2));
+    }
+
+    public function generate()
+    {
+        return strtoupper(sprintf("%s-%s-%s", $this->part(), $this->part(), $this->part()));
+    }
 }
 
-fclose($csv);
+```
+
+Then tell the model to use this generator.
+
+```
+$model = new Vouchers\Voucher\Model([
+    'code' => [
+        'generator' => \My\Voucher\Generator\MyCode::class
+    ]
+]);
+```
+
+## Bags
+Bags act as collections for vouchers and allow you to enforce validations on a whole set. Bags can also act as a selector for vouchers, allowing to you pick a voucher at random and enforce rules on that selection. Bags are also `Iterable` so they can be used in loops.
+
+```php
+$collection = new Vouchers\Bag();
+$collection->fill(1000);
+
+foreach($collection as $voucher) {
+    print $voucher;
+}
+```
+
+You can use `Vouchers\Voucher\Model` to enfore a model on all items in a bag by passing a model as the first attribute on construction.
+
+```
+$collection = new Vouchers\Bag($model);
+```
+
+You can fill a model with existing vouchers by using `add()` add will only accept an instance of `Vouchers\Voucher`
+
+```
+$vouchers = [$voucher1...$voucher100];
+foreach ($vouchers as $voucher) {
+    $collection->add(new Vouchers\Voucher($voucher));
+}
+```
+
+You can also run a map on any array, mapping the return as new vouchers within the bag. This is handy if you need to transform data to fit a model.
+
+```
+$collection->map($vouchers, function ($voucher) {
+    return new Vouchers\Voucher($voucher);
+});
+```
+
+### Pick
+You can have the bag pick you a voucher at random by using `pick()` on any bag.
+
+```
+$collection = new Vouchers\Bag();
+$collection->fill(1000);
+
+$collection->pick();
+```
+
+If you wish to validate the selection you can pass a callback to pick which will run until it returns a `true` or throw an `Vouchers\Exceptions\NoValidVouchers` exception.
+
+```
+$collection->pick(function ($voucher) {
+    return (bool)$voucher->owner == "Alan";
+});
+```
+
+```
+try {
+    $collection->pick(function ($voucher) {
+        return 2 == 1;
+    });
+} catch (Exception $e) {
+    print $e->getMessage();
+}
+```
+
+You may also ask `pick()` to check all validators this bag might have (see Validate) and only return a voucher that is valid. Again this will throw `Vouchers\Exceptions\NoValidVouchers` is it doesn't find a voucher.
+
+```
+$collection->pickValid();
+```
+
+### Validate
+You can add validators to a bag, these validators can be used to validate requirements of a voucher using `validate()` on a bag and passing the voucher code as a parameter.
+
+```
+$collection->validate("ALAN-COLE-CODE");
+```
+
+Validators can be added as callbacks to the validator function, or as a class that implements `Vouchers\Voucher\Validator` here is an example that assumes a voucher has an `expire_date` and checks it has not passed.
+
+```
+$collection->validator(function ($voucher) {
+    return $voucher->expire_date > new DateTime();
+}, "Sorry, this voucher is expired");
+
+try {
+    $collection->validate("ALAN-COLE-CODE");
+} catch (\Vouchers\Exceptions\VoucherNotValid $e) {
+    return $e->getMessage(); // "Sorry, this voucher is expired";
+}
+```
+
+It's also possible to pass outside values into validators using `validate()` every argument after the first will be passed to all validators.
+
+```
+$array['check'] = "thing";
+
+$collection->validator(function ($voucher, $check) {
+    return $check['check'] == "thing";
+}, "Sorry, this voucher doesn't thing.");
+
+try {
+    $collection->validate("ALAN-COLE-CODE");
+} catch (\Vouchers\Exceptions\VoucherNotValid $e) {
+    return $e->getMessage(); // "Sorry, this voucher doesn't thing.";
+}
 ```
