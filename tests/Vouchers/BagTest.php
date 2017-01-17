@@ -176,4 +176,19 @@ class BagTest extends PHPUnit
             return new \Vouchers\Voucher($voucher);
         });
     }
+
+    /**
+     * Test collections are iterable
+     */
+    public function testBagCollectionIsIterable()
+    {
+        $bag = new \Vouchers\Bag();
+        $bag->fill(10);
+        $i = 0;
+        foreach ($bag as $item) {
+            $i++;
+        }
+
+        $this->assertSame($i, 10);
+    }
 }

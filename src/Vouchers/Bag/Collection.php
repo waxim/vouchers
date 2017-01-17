@@ -42,7 +42,7 @@ class Collection implements \Iterator
      */
     public function rewind()
     {
-        return rewind($this->values);
+        return reset($this->values);
     }
 
     /**
