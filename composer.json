@@ -1,0 +1,10 @@
+{
+    "name": "alancole/vouchers",
+    "description": "A Simple PHP library for gernating and validating voucher codes.",
+    "type": "composer",
+    "autoload": {
+        "psr-4": {
+            "Vouchers\\": "src/Vouchers"
+        }
+    }
+}

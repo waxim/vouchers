@@ -1,0 +1,161 @@
+<?php
+
+namespace Vouchers;
+
+class Bag extends Bag\Collection
+{
+
+    /**
+     * Default validation message
+     *
+     * @const string
+     */
+    const VALIDATION_MESSAGE = "Validation failed.";
+
+    /**
+     * Store our validators.
+     *
+     * @var array
+     */
+    protected $validators = [];
+
+    /**
+     * We have a model?
+     *
+     * @var \Vouchers\Voucher\Model
+     */
+    protected $model = null;
+
+    /**
+     * Start a new bag.
+     *
+     * @param \Vouchers\Voucher\Model
+     * @return void
+     */
+    public function __construct(\Vouchers\Voucher\Model $model = null)
+    {
+        if ($model) {
+            $this->model = $model;
+        }
+    }
+
+    /**
+     * Fill our bag with vouchers.
+     *
+     * @param int $number
+     * @return void
+     */
+    public function fill($number = 0)
+    {
+        for ($i = 0; $i < $number; $i++) {
+            $this->add(new Voucher);
+        }
+    }
+
+    /**
+     * Pick a random voucher
+     *
+     * @return Voucher $voucher
+     */
+    public function pick()
+    {
+        return $this->values[array_rand($this->values)];
+    }
+
+    /**
+     * Add an array to our collection.
+     *
+     * @param array $data
+     * @param callable $callback
+     * @return void
+     */
+    public function map(array $data, callable $callback)
+    {
+        foreach ($data as $item) {
+            $result = $callback($item);
+            $this->add($result);
+        }
+    }
+
+    /**
+     * Walk through all vouchers
+     * until we find a valid one.
+     *
+     * @param string $code
+     * @throws VoucherValidationFailed
+     * @return bool
+     */
+    public function pickValid()
+    {
+        $voucher = null;
+        foreach ($this->values as $value) {
+            try {
+                $result = $this->validate((string)$value);
+                if ($result) {
+                    $voucher = $value;
+                }
+            } catch (Exception $e) {
+                continue;
+            }
+        }
+
+        if ($voucher == null) {
+            throw new \Vouchers\Voucher\NoValidVouchers();
+        }
+
+        return $voucher;
+    }
+
+    /**
+     * Validate a code.
+     *
+     * @param string $code
+     * @throws VoucherValidationFailed
+     * @return bool
+     */
+    public function validate($code)
+    {
+        foreach ($this->validators as $rule) {
+            $callback = $rule['callback'];
+            $message = $rule['message'];
+
+            if (!$callback($code)) {
+                throw new \Vouchers\Exceptions\ValidationCallbackFail($message);
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Add a validation function
+     *
+     * @param callable $callback
+     * @param $string message
+     *
+     * @return void
+     */
+    public function validator(callable $callback, $message = self::VALIDATION_MESSAGE)
+    {
+        $rule = [
+            'message'  => $message,
+            'callback' => $callback
+        ];
+        array_push($this->validators, $rule);
+    }
+
+    /**
+     * Add a voucher to our collection
+     *
+     * @param Voucher $voucher
+     * @return void
+     */
+    public function add(Voucher $voucher)
+    {
+        if ($this->model) {
+            $this->model->validate($voucher->toArray());
+        }
+
+        array_push($this->values, $voucher);
+    }
+}
