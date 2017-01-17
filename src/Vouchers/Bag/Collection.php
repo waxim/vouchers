@@ -56,19 +56,22 @@ class Collection implements \Iterator
     }
 
     /**
-     * Juat assume everything is valid.
+     * Make sure the key is a real one
+     * or loops will last forever.
      */
     public function valid()
     {
-        return true;
+        $key = key($this->values);
+        return ($key !== null && $key !== false);
     }
 
-    public function toArray(array $fields = null)
+    /**
+     * Returns a full array for codes.
+     *
+     * @return array
+     */
+    public function toArray()
     {
-        if ($fields) {
-            // do something
-        }
-
         $collection = [];
         foreach ($this->values as $value) {
             $collection[] = (string)$value;
