@@ -23,6 +23,7 @@ class Model
 
     /**
      * Custom generator?
+     *
      * @var class
      */
     protected $generator;

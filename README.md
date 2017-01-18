@@ -11,10 +11,6 @@ $model = new Vouchers\Voucher\Model([
     ],
     'claimed_by' => [
         'required' => true,
-        'default'  => "Unclaimed"
-    ],
-    'claimed_on' => [
-        'default' => function() { return new DateTime(); }
     ]
 ]);
 
@@ -59,10 +55,6 @@ $model = new Vouchers\Voucher\Model([
     ],
     'claimed_by' => [
         'required' => true,
-        'default'  => "Unclaimed"
-    ],
-    'claimed_on' => [
-        'default' => function() { return new DateTime(); }
     ]
 ]);
 ```
