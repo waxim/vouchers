@@ -4,7 +4,6 @@ namespace Vouchers\Voucher\Code;
 
 interface GeneratorInterface
 {
-
     /**
      * Return a voucher code.
      *
@@ -16,6 +15,7 @@ interface GeneratorInterface
      * Validate a voucher code.
      *
      * @param string $code
+     *
      * @return bool
      */
     public function validate($code);

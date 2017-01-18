@@ -4,11 +4,11 @@ namespace Vouchers\Voucher\Code;
 
 class Generator implements GeneratorInterface
 {
-
     /**
-     * Pattern RegEx
+     * Pattern RegEx.
      *
      * @format XXXX-XXXX-XXXX-XXXX
+     *
      * @var string
      */
     const REGEX = "/[\w\d]{4}\-[\w\d]{4}\-[\w\d]{4}\-[\w\d]{4}/";
@@ -30,17 +30,18 @@ class Generator implements GeneratorInterface
      */
     public function generate()
     {
-        return strtoupper(sprintf("%s-%s-%s-%s", $this->part(), $this->part(), $this->part(), $this->part()));
+        return strtoupper(sprintf('%s-%s-%s-%s', $this->part(), $this->part(), $this->part(), $this->part()));
     }
 
     /**
-     * Validate a voucher code
+     * Validate a voucher code.
      *
      * @param string $code
+     *
      * @return bool
      */
     public function validate($code)
     {
-        return (bool)preg_match($code, self::REGEX);
+        return (bool) preg_match($code, self::REGEX);
     }
 }

@@ -6,13 +6,12 @@ use Vouchers\Voucher as V;
 
 class Model
 {
-
     /**
      * What the key for generators in model arrays?
      *
      * @var string
      */
-    const GENERATOR_KEY = "generator";
+    const GENERATOR_KEY = 'generator';
 
     /**
      * Hold our model data.
@@ -32,6 +31,7 @@ class Model
      * Load a new model and parse it.
      *
      * @param array $model
+     *
      * @return void
      */
     public function __construct(array $model)
@@ -43,7 +43,8 @@ class Model
      * Actually parse the mode and set our generator
      * if we have one.
      *
-     * @param  array  $model
+     * @param array $model
+     *
      * @return void
      */
     public function parseModel(array $model)
@@ -69,19 +70,20 @@ class Model
     }
 
     /**
-     * Get our custom generator
+     * Get our custom generator.
      *
      * @return \Vouchers\Voucher\Code\GeneratorInterface
      */
     public function getGenerator()
     {
-        return $this->generator ? new $this->generator : false;
+        return $this->generator ? new $this->generator() : false;
     }
 
     /**
-     * Validate data against model
+     * Validate data against model.
      *
      * @param array $data
+     *
      * @return bool
      */
     public function validate(array $data = [], $voucher = null)

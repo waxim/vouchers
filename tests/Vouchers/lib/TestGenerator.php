@@ -6,7 +6,7 @@ use Vouchers\Voucher\Code\GeneratorInterface as Generator;
 
 class TestGenerator implements Generator
 {
-    const TEST_CODE = "VOUCHER-TEST-CODE";
+    const TEST_CODE = 'VOUCHER-TEST-CODE';
 
     public function generate()
     {

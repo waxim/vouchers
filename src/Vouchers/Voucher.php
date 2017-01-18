@@ -4,16 +4,15 @@ namespace Vouchers;
 
 class Voucher
 {
-
     /**
      * What our 'code' called.
      *
      * @var string
      */
-    const VOUCHER_CODE_KEY = "code";
+    const VOUCHER_CODE_KEY = 'code';
 
     /**
-     * Somewhere to hold data
+     * Somewhere to hold data.
      *
      * @var array
      */
@@ -34,10 +33,10 @@ class Voucher
     private $generator = \Vouchers\Voucher\Code\Generator::class;
 
     /**
-     * Building a new voucher
+     * Building a new voucher.
      *
-     * @param array $data                       Data to use for this voucher
-     * @param Vouchers\Voucher\Model $Model     A model to validate the model against
+     * @param array                  $data  Data to use for this voucher
+     * @param Vouchers\Voucher\Model $Model A model to validate the model against
      *
      * @return void
      */
@@ -51,14 +50,14 @@ class Voucher
      *
      * Parse our data to build voucher
      *
-     * @param array $data                       Data to use for this voucher
-     * @param Vouchers\Voucher\Model $Model     A model to validate the model against
+     * @param array                  $data  Data to use for this voucher
+     * @param Vouchers\Voucher\Model $Model A model to validate the model against
      *
      * @return void
      */
     private function parseData(array $data = [], Voucher\Model $model = null)
     {
-        # Validate Model
+        // Validate Model
         if ($model) {
             $this->processDataWithModel($data, $model);
         }
@@ -68,9 +67,10 @@ class Voucher
     }
 
     /**
-     * Set an array as data
+     * Set an array as data.
      *
      * @param $data
+     *
      * @return void
      */
     private function setArrayAsData(array $data)
@@ -103,13 +103,13 @@ class Voucher
         $model->validate($data);
         $this->data = array_merge($this->data, $data);
 
-        # Validate Code.
+        // Validate Code.
         $modelGenerator = $model->getGenerator();
 
         if ($modelGenerator) {
             if (isset($data[self::VOUCHER_CODE_KEY])) {
                 if (!$modelGenerator->validate($data[self::VOUCHER_CODE_KEY])) {
-                    throw new \Vouchers\Exceptions\VoucherCodeInvalid;
+                    throw new \Vouchers\Exceptions\VoucherCodeInvalid();
                 } else {
                     $this->data[self::VOUCHER_CODE_KEY] = $data[self::VOUCHER_CODE_KEY];
                 }
@@ -120,20 +120,22 @@ class Voucher
     }
 
     /**
-     * Runs our gernator and gets a code
+     * Runs our gernator and gets a code.
      *
      * @return string
      */
     public function generate()
     {
-        $generator = new $this->generator;
+        $generator = new $this->generator();
+
         return $generator->generate();
     }
 
     /**
-     * Get a data value
+     * Get a data value.
      *
      * @param $key
+     *
      * @return mixed
      */
     public function get($key)
@@ -142,10 +144,10 @@ class Voucher
     }
 
     /**
-     * Get set a data value
+     * Get set a data value.
      *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return mixed $value
      */
@@ -156,6 +158,7 @@ class Voucher
         }
 
         $this->data[$key] = $value;
+
         return $value;
     }
 
@@ -170,9 +173,10 @@ class Voucher
     }
 
     /**
-     * Add immutable keys
+     * Add immutable keys.
      *
      * @param string $key
+     *
      * @return void
      */
     public function addImmutableKey($key)
@@ -181,7 +185,7 @@ class Voucher
     }
 
     /**
-     * What to do when cast to sting
+     * What to do when cast to sting.
      *
      * @return string
      */
@@ -191,7 +195,7 @@ class Voucher
     }
 
     /**
-     * Get all our data as an array
+     * Get all our data as an array.
      *
      * @return array
      */

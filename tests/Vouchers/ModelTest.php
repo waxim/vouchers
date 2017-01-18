@@ -2,29 +2,29 @@
 
 namespace Vouchers\Tests;
 
-require "lib/TestGenerator.php";
+require 'lib/TestGenerator.php';
 
 use PHPUnit_Framework_TestCase as PHPUnit;
 
 class ModelTest extends PHPUnit
 {
     /**
-     * Test custom generator class
+     * Test custom generator class.
      */
     public function testCustomGeneratorAsClass()
     {
         $model = new \Vouchers\Voucher\Model([
             'code' => [
-                'generator' => TestGenerator::class
-            ]
+                'generator' => TestGenerator::class,
+            ],
         ]);
 
         $voucher = new \Vouchers\Voucher([], $model);
-        $this->assertSame((string)$voucher, TestGenerator::TEST_CODE);
+        $this->assertSame((string) $voucher, TestGenerator::TEST_CODE);
     }
 
     /**
-     * Test custom validator error
+     * Test custom validator error.
      *
      * @expectedException \Vouchers\Exceptions\VoucherCodeInvalid
      */
@@ -32,26 +32,26 @@ class ModelTest extends PHPUnit
     {
         $model = new \Vouchers\Voucher\Model([
             'code' => [
-                'generator' => "\Vouchers\Tests\TestGenerator"
-            ]
+                'generator' => "\Vouchers\Tests\TestGenerator",
+            ],
         ]);
 
         $voucher = new \Vouchers\Voucher(['code' => 'SOMETHING-ELSE'], $model);
     }
 
     /**
-     * Test custom validator success
+     * Test custom validator success.
      */
     public function testCustomValidatorSuccess()
     {
         $model = new \Vouchers\Voucher\Model([
             'code' => [
-                'generator' => TestGenerator::class
-            ]
+                'generator' => TestGenerator::class,
+            ],
         ]);
 
         $voucher = new \Vouchers\Voucher(['code' => TestGenerator::TEST_CODE], $model);
-        $this->assertSame((string)$voucher, TestGenerator::TEST_CODE);
+        $this->assertSame((string) $voucher, TestGenerator::TEST_CODE);
     }
 
     /**
@@ -64,12 +64,12 @@ class ModelTest extends PHPUnit
         $model = new \Vouchers\Voucher\Model([
             'created' => [
                 'required'  => true,
-                'immutable' => true
-            ]
+                'immutable' => true,
+            ],
         ]);
 
-        $voucher = new \Vouchers\Voucher(['created' => "12/12/12"], $model);
-        $voucher->set("created", "something else");
+        $voucher = new \Vouchers\Voucher(['created' => '12/12/12'], $model);
+        $voucher->set('created', 'something else');
     }
 
     /**
@@ -79,15 +79,15 @@ class ModelTest extends PHPUnit
     {
         $model = new \Vouchers\Voucher\Model([
             'name' => [
-                'required'  => true
+                'required'  => true,
             ],
             'email' => [
-                'required'  => true
-            ]
+                'required'  => true,
+            ],
         ]);
 
-        $voucher = new \Vouchers\Voucher(['name' => "Alan Cole", 'email' => "me@alancole.io"], $model);
-        $this->assertSame($voucher->get("name"), "Alan Cole");
+        $voucher = new \Vouchers\Voucher(['name' => 'Alan Cole', 'email' => 'me@alancole.io'], $model);
+        $this->assertSame($voucher->get('name'), 'Alan Cole');
     }
 
     /**
@@ -99,13 +99,13 @@ class ModelTest extends PHPUnit
     {
         $model = new \Vouchers\Voucher\Model([
             'name' => [
-                'required'  => true
+                'required'  => true,
             ],
             'email' => [
-                'required'  => true
-            ]
+                'required'  => true,
+            ],
         ]);
 
-        $voucher = new \Vouchers\Voucher(['name' => "Alan Cole"], $model);
+        $voucher = new \Vouchers\Voucher(['name' => 'Alan Cole'], $model);
     }
 }

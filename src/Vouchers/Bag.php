@@ -4,13 +4,12 @@ namespace Vouchers;
 
 class Bag extends Bag\Collection
 {
-
     /**
-     * Default validation message
+     * Default validation message.
      *
      * @const string
      */
-    const VALIDATION_MESSAGE = "Validation failed.";
+    const VALIDATION_MESSAGE = 'Validation failed.';
 
     /**
      * Store our validators.
@@ -30,6 +29,7 @@ class Bag extends Bag\Collection
      * Start a new bag.
      *
      * @param \Vouchers\Voucher\Model
+     *
      * @return void
      */
     public function __construct(\Vouchers\Voucher\Model $model = null)
@@ -43,17 +43,18 @@ class Bag extends Bag\Collection
      * Fill our bag with vouchers.
      *
      * @param int $number
+     *
      * @return void
      */
     public function fill($number = 0)
     {
         for ($i = 0; $i < $number; $i++) {
-            $this->add(new Voucher);
+            $this->add(new Voucher());
         }
     }
 
     /**
-     * Pick a random voucher
+     * Pick a random voucher.
      *
      * @return Voucher $voucher
      */
@@ -71,7 +72,9 @@ class Bag extends Bag\Collection
      * a voucher.
      *
      * @param callable $callback
+     *
      * @throws NoValidVouchers
+     *
      * @return Voucher $voucher
      */
     public function pickWithCallback(callable $callback)
@@ -88,8 +91,9 @@ class Bag extends Bag\Collection
     /**
      * Add an array to our collection.
      *
-     * @param array $data
+     * @param array    $data
      * @param callable $callback
+     *
      * @return void
      */
     public function map(array $data, callable $callback)
@@ -105,7 +109,9 @@ class Bag extends Bag\Collection
      * until we find a valid one.
      *
      * @param string $code
+     *
      * @throws VoucherValidationFailed
+     *
      * @return bool
      */
     public function pickValid()
@@ -113,7 +119,7 @@ class Bag extends Bag\Collection
         $voucher = null;
         foreach ($this->values as $value) {
             try {
-                $result = $this->validate((string)$value);
+                $result = $this->validate((string) $value);
                 if ($result) {
                     $voucher = $value;
                 }
@@ -133,7 +139,9 @@ class Bag extends Bag\Collection
      * Validate a code.
      *
      * @param string $code
+     *
      * @throws VoucherValidationFailed
+     *
      * @return bool
      */
     public function validate($code)
@@ -151,7 +159,7 @@ class Bag extends Bag\Collection
     }
 
     /**
-     * Add a validation function
+     * Add a validation function.
      *
      * @param callable $callback
      * @param $string message
@@ -162,15 +170,16 @@ class Bag extends Bag\Collection
     {
         $rule = [
             'message'  => $message,
-            'callback' => $callback
+            'callback' => $callback,
         ];
         array_push($this->validators, $rule);
     }
 
     /**
-     * Add a voucher to our collection
+     * Add a voucher to our collection.
      *
      * @param Voucher $voucher
+     *
      * @return void
      */
     public function add(Voucher $voucher)
@@ -186,12 +195,13 @@ class Bag extends Bag\Collection
      * Get a voucher by code.
      *
      * @param string $code
+     *
      * @return string|Voucher
      */
     public function find($code)
     {
         foreach ($this->values as $key => $voucher) {
-            if ($code == (string)$voucher) {
+            if ($code == (string) $voucher) {
                 return $voucher;
             }
         }
