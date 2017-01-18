@@ -110,6 +110,9 @@ class BagTest extends PHPUnit
         $bag = new \Vouchers\Bag();
         $bag->fill(100);
 
+        $a = 12;
+        $b = 13;
+
         $bag->validator(function ($voucher) {
             return strlen($voucher) > 1000;
         }, "Strlen check failed.");

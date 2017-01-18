@@ -205,22 +205,6 @@ try {
 }
 ```
 
-It's also possible to pass outside values into validators using `validate()` every argument after the first will be passed to all validators.
-
-```php
-$array['check'] = "thing";
-
-$collection->validator(function ($voucher, $check) {
-    return $check['check'] == "thing";
-}, "Sorry, this voucher doesn't thing.");
-
-try {
-    $collection->validate("ALAN-COLE-CODE");
-} catch (\Vouchers\Exceptions\VoucherNotValid $e) {
-    return $e->getMessage(); // "Sorry, this voucher doesn't thing.";
-}
-```
-
 ### Kitchen Sink
 This shows how to get vouchers from the subscriptions api, take a requested voucher, validate it and the claim it on the API.
 
