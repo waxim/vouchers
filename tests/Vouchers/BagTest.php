@@ -102,7 +102,7 @@ class BagTest extends PHPUnit
     /**
      * Test we get an error when data is invalid.
      *
-     * @expectedException Vouchers\Exceptions\ValidationCallbackFail
+     * @expectedException \Vouchers\Exceptions\NoValidVouchers
      */
     public function testCanFailToPickWithValidatorCallback()
     {

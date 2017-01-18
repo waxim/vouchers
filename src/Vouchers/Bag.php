@@ -123,13 +123,13 @@ class Bag extends Bag\Collection
                 if ($result) {
                     $voucher = $value;
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 continue;
             }
         }
 
         if ($voucher == null) {
-            throw new \Vouchers\Voucher\NoValidVouchers();
+            throw new \Vouchers\Exceptions\NoValidVouchers();
         }
 
         return $voucher;
