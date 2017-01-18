@@ -1,3 +1,5 @@
+[![StyleCI](https://styleci.io/repos/78642763/shield?branch=master)](https://styleci.io/repos/78642763) [![CircleCI](https://circleci.com/gh/waxim/vouchers.svg?style=svg)](https://circleci.com/gh/waxim/vouchers)
+
 # Vouchers Lib
 A PHP library for generating and validating vouchers. We make no assumptions about storage and instead offer the concept of `Bags` which can take any number of `Vouchers`. These bags can validate vouchers, generate new vouchers and apply validation rules across the whole set.
 
