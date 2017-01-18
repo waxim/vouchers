@@ -5,14 +5,14 @@ namespace Vouchers\Bag;
 class Collection implements \Iterator
 {
     /**
-     * Holds all of our 'vouchers'
+     * Holds all of our 'vouchers'.
      *
      * @var array
      */
     protected $values = [];
 
     /**
-     * Returns the current element
+     * Returns the current element.
      *
      * @return mixed
      */
@@ -38,7 +38,7 @@ class Collection implements \Iterator
     }
 
     /**
-     * Reset the array
+     * Reset the array.
      */
     public function rewind()
     {
@@ -62,7 +62,8 @@ class Collection implements \Iterator
     public function valid()
     {
         $key = key($this->values);
-        return ($key !== null && $key !== false);
+
+        return $key !== null && $key !== false;
     }
 
     /**
@@ -74,7 +75,7 @@ class Collection implements \Iterator
     {
         $collection = [];
         foreach ($this->values as $value) {
-            $collection[] = (string)$value;
+            $collection[] = (string) $value;
         }
 
         return $collection;

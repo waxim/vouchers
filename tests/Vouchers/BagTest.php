@@ -6,9 +6,8 @@ use PHPUnit_Framework_TestCase as PHPUnit;
 
 class BagTest extends PHPUnit
 {
-
     /**
-     * Start a bag
+     * Start a bag.
      */
     public function testCanMakeABag()
     {
@@ -28,7 +27,7 @@ class BagTest extends PHPUnit
     }
 
     /**
-     * Fill a new bag with vouchers
+     * Fill a new bag with vouchers.
      */
     public function testCanFillABag()
     {
@@ -38,7 +37,7 @@ class BagTest extends PHPUnit
     }
 
     /**
-     * Fill a new bag with vouchers from a map
+     * Fill a new bag with vouchers from a map.
      */
     public function testCanFillFromAMap()
     {
@@ -46,7 +45,7 @@ class BagTest extends PHPUnit
             'My-Voucher',
             'This02',
             'Testme',
-            '12-12-12'
+            '12-12-12',
         ];
 
         $bag = new \Vouchers\Bag();
@@ -58,7 +57,7 @@ class BagTest extends PHPUnit
     }
 
     /**
-     * Test we can pick a voucher
+     * Test we can pick a voucher.
      */
     public function testCanPickFromABag()
     {
@@ -71,7 +70,7 @@ class BagTest extends PHPUnit
     }
 
     /**
-     * Test we can pickValid on a bag
+     * Test we can pickValid on a bag.
      */
     public function testCanPickValidFromABag()
     {
@@ -93,7 +92,7 @@ class BagTest extends PHPUnit
 
         $bag->validator(function ($voucher) {
             return strlen($voucher) > 4;
-        }, "Strlen check failed.");
+        }, 'Strlen check failed.');
 
         $voucher = $bag->pickValid();
 
@@ -115,7 +114,7 @@ class BagTest extends PHPUnit
 
         $bag->validator(function ($voucher) {
             return strlen($voucher) > 1000;
-        }, "Strlen check failed.");
+        }, 'Strlen check failed.');
 
         $voucher = $bag->pickValid();
 
@@ -130,18 +129,18 @@ class BagTest extends PHPUnit
     {
         $model = new \Vouchers\Voucher\Model([
             'name' => [
-                'required'  => true
+                'required'  => true,
             ],
             'email' => [
-                'required'  => true
-            ]
+                'required'  => true,
+            ],
         ]);
 
         $vouchers = [
-            ['code' => 'MyTestCode1','name' => 'Person Name','email' => 'person@person.tld'],
-            ['code' => 'MyTestCode2','name' => 'Person2 Name','email' => 'person2@person.tld'],
-            ['code' => 'MyTestCode3','name' => 'Person3 Name','email' => 'person3@person.tld'],
-            ['code' => 'MyTestCode4','name' => 'Person4 Name','email' => 'person4@person.tld']
+            ['code' => 'MyTestCode1', 'name' => 'Person Name', 'email' => 'person@person.tld'],
+            ['code' => 'MyTestCode2', 'name' => 'Person2 Name', 'email' => 'person2@person.tld'],
+            ['code' => 'MyTestCode3', 'name' => 'Person3 Name', 'email' => 'person3@person.tld'],
+            ['code' => 'MyTestCode4', 'name' => 'Person4 Name', 'email' => 'person4@person.tld'],
         ];
 
         $bag = new \Vouchers\Bag($model);
@@ -160,18 +159,18 @@ class BagTest extends PHPUnit
     {
         $model = new \Vouchers\Voucher\Model([
             'name' => [
-                'required'  => true
+                'required'  => true,
             ],
             'email' => [
-                'required'  => true
-            ]
+                'required'  => true,
+            ],
         ]);
 
         $vouchers = [
-            ['code' => 'MyTestCode1','name' => 'Person Name','email' => 'person@person.tld'],
-            ['code' => 'MyTestCode2','name' => 'Person2 Name','email' => 'person2@person.tld'],
-            ['code' => 'MyTestCode3','name' => 'Person3 Name','email' => 'person3@person.tld'],
-            ['code' => 'MyTestCode4','name' => 'Person4 Name','semail' => 'person4@person.tld']
+            ['code' => 'MyTestCode1', 'name' => 'Person Name', 'email' => 'person@person.tld'],
+            ['code' => 'MyTestCode2', 'name' => 'Person2 Name', 'email' => 'person2@person.tld'],
+            ['code' => 'MyTestCode3', 'name' => 'Person3 Name', 'email' => 'person3@person.tld'],
+            ['code' => 'MyTestCode4', 'name' => 'Person4 Name', 'semail' => 'person4@person.tld'],
         ];
 
         $bag = new \Vouchers\Bag($model);
@@ -181,7 +180,7 @@ class BagTest extends PHPUnit
     }
 
     /**
-     * Test collections are iterable
+     * Test collections are iterable.
      */
     public function testBagCollectionIsIterable()
     {
@@ -201,9 +200,9 @@ class BagTest extends PHPUnit
     public function testFindAVoucher()
     {
         $bag = new \Vouchers\Bag();
-        $voucher = new \Vouchers\Voucher(['code' => "MY-VOUCHER"]);
+        $voucher = new \Vouchers\Voucher(['code' => 'MY-VOUCHER']);
         $bag->add($voucher);
-        $test = $bag->find("MY-VOUCHER");
+        $test = $bag->find('MY-VOUCHER');
         $this->assertSame($voucher, $test);
     }
 
@@ -215,12 +214,12 @@ class BagTest extends PHPUnit
         $bag = new \Vouchers\Bag();
         $voucher = new \Vouchers\Voucher([
             'code'  => 'MY-Test-code',
-            'owner' => 'tester'
+            'owner' => 'tester',
         ]);
         $bag->add($voucher);
 
         $test = $bag->pick(function ($voucher) {
-            return $voucher->get('owner') == "tester";
+            return $voucher->get('owner') == 'tester';
         });
 
         $this->assertSame($test, $voucher);
@@ -236,12 +235,12 @@ class BagTest extends PHPUnit
         $bag = new \Vouchers\Bag();
         $voucher = new \Vouchers\Voucher([
             'code'  => 'MY-Test-code',
-            'owner' => 'tester'
+            'owner' => 'tester',
         ]);
         $bag->add($voucher);
 
         $test = $bag->pick(function ($voucher) {
-            return $voucher->get('owner') == "not a tester";
+            return $voucher->get('owner') == 'not a tester';
         });
 
         $this->assertSame($test, $voucher);
