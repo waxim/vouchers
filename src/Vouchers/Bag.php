@@ -158,4 +158,21 @@ class Bag extends Bag\Collection
 
         array_push($this->values, $voucher);
     }
+
+    /**
+     * Get a voucher by code.
+     *
+     * @param string $code
+     * @return string|Voucher
+     */
+    public function find($code)
+    {
+        foreach ($this->values as $key => $voucher) {
+            if ($code == (string)$voucher) {
+                return $voucher;
+            }
+        }
+
+        return false;
+    }
 }

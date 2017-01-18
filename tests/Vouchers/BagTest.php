@@ -191,4 +191,16 @@ class BagTest extends PHPUnit
 
         $this->assertSame($i, 10);
     }
+
+    /**
+     * Test voucher find.
+     */
+    public function testFindAVoucher()
+    {
+        $bag = new \Vouchers\Bag();
+        $voucher = new \Vouchers\Voucher(['code' => "MY-VOUCHER"]);
+        $bag->add($voucher);
+        $test = $bag->find("MY-VOUCHER");
+        $this->assertSame($voucher, $test);
+    }
 }

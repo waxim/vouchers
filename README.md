@@ -134,6 +134,22 @@ $collection->map($vouchers, function ($voucher) {
 });
 ```
 
+You can get a voucher by code, which can be used to see if a voucher exists.
+
+```
+$collection = new Vouchers\Bag();
+$voucher = new Vouchers\Voucher(['code' => 'special-voucher']);
+$collection->add($voucher);
+
+$v = $collection->find("special-voucher");
+
+if ($v) {
+    print (string)$v;
+} else {
+    print "Voucher does not exist.";
+}
+```
+
 ### Pick
 You can have the bag pick you a voucher at random by using `pick()` on any bag.
 
