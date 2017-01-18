@@ -206,4 +206,44 @@ class BagTest extends PHPUnit
         $test = $bag->find("MY-VOUCHER");
         $this->assertSame($voucher, $test);
     }
+
+    /**
+     * Test pick with callback.
+     */
+    public function testPickWithACallback()
+    {
+        $bag = new \Vouchers\Bag();
+        $voucher = new \Vouchers\Voucher([
+            'code'  => 'MY-Test-code',
+            'owner' => 'tester'
+        ]);
+        $bag->add($voucher);
+
+        $test = $bag->pick(function ($voucher) {
+            return $voucher->get('owner') == "tester";
+        });
+
+        $this->assertSame($test, $voucher);
+    }
+
+    /**
+     * Test pick with callback.
+     *
+     * @expectedException \Vouchers\Exceptions\NoValidVouchers
+     */
+    public function testPickWithACallbackFails()
+    {
+        $bag = new \Vouchers\Bag();
+        $voucher = new \Vouchers\Voucher([
+            'code'  => 'MY-Test-code',
+            'owner' => 'tester'
+        ]);
+        $bag->add($voucher);
+
+        $test = $bag->pick(function ($voucher) {
+            return $voucher->get('owner') == "not a tester";
+        });
+
+        $this->assertSame($test, $voucher);
+    }
 }

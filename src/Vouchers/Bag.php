@@ -57,9 +57,32 @@ class Bag extends Bag\Collection
      *
      * @return Voucher $voucher
      */
-    public function pick()
+    public function pick(callable $callback = null)
     {
+        if ($callback) {
+            return $this->pickWithCallback($callback);
+        }
+
         return $this->values[array_rand($this->values)];
+    }
+
+    /**
+     * Receive a callback and use it to pick
+     * a voucher.
+     *
+     * @param callable $callback
+     * @throws NoValidVouchers
+     * @return Voucher $voucher
+     */
+    public function pickWithCallback(callable $callback)
+    {
+        foreach ($this->values as $voucher) {
+            if ($callback($voucher)) {
+                return $voucher;
+            }
+        }
+
+        throw new \Vouchers\Exceptions\NoValidVouchers();
     }
 
     /**
