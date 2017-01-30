@@ -144,7 +144,7 @@ $collection->map($vouchers, function ($voucher) {
 
 You can get a voucher by code, which can be used to see if a voucher exists.
 
-```
+```php
 $collection = new Vouchers\Bag();
 $voucher = new Vouchers\Voucher(['code' => 'special-voucher']);
 $collection->add($voucher);
