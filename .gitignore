@@ -1,3 +1,4 @@
 vendor/*
 *.lock
 index.php
+.phpunit.result.cache

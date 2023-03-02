@@ -4,9 +4,9 @@ namespace Vouchers\Tests;
 
 require 'lib/TestGenerator.php';
 
-use PHPUnit_Framework_TestCase as PHPUnit;
+use PHPUnit\Framework\TestCase;
 
-class ModelTest extends PHPUnit
+class ModelTest extends TestCase
 {
     /**
      * Test custom generator class.
@@ -30,6 +30,7 @@ class ModelTest extends PHPUnit
      */
     public function testCustomValidatorError()
     {
+        $this->expectException(\Vouchers\Exceptions\VoucherCodeInvalid::class);
         $model = new \Vouchers\Voucher\Model([
             'code' => [
                 'generator' => "\Vouchers\Tests\TestGenerator",
@@ -61,6 +62,7 @@ class ModelTest extends PHPUnit
      */
     public function testAddingImmutableData()
     {
+        $this->expectException(\Vouchers\Exceptions\ImmutableData::class);
         $model = new \Vouchers\Voucher\Model([
             'created' => [
                 'required'  => true,
@@ -97,6 +99,7 @@ class ModelTest extends PHPUnit
      */
     public function testDataValidationError()
     {
+        $this->expectException(\Vouchers\Exceptions\VoucherValidationFailed::class);
         $model = new \Vouchers\Voucher\Model([
             'name' => [
                 'required'  => true,
