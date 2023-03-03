@@ -71,7 +71,7 @@ class ModelTest extends TestCase
         ]);
 
         $voucher = new \Vouchers\Voucher(['created' => '12/12/12'], $model);
-        $voucher->set('created', 'something else');
+        $voucher->setCreated('13/13/13');
     }
 
     /**
@@ -89,7 +89,7 @@ class ModelTest extends TestCase
         ]);
 
         $voucher = new \Vouchers\Voucher(['name' => 'Alan Cole', 'email' => 'me@alancole.io'], $model);
-        $this->assertSame($voucher->get('name'), 'Alan Cole');
+        $this->assertSame($voucher->getName(), 'Alan Cole');
     }
 
     /**

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Vouchers\Bag;
 
@@ -71,7 +71,7 @@ class Collection implements \Iterator
      *
      * @return array
      */
-    public function toArray()
+    public function toArray() :array
     {
         $collection = [];
         foreach ($this->values as $value) {

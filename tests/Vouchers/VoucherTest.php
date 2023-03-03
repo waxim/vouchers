@@ -37,8 +37,8 @@ class VoucherTest extends TestCase
     public function testDataGetterAndSetter()
     {
         $voucher = new \Vouchers\Voucher();
-        $voucher->set('used', false);
-        $this->assertFalse($voucher->get('used'));
+        $voucher->setUsed(false);
+        $this->assertFalse($voucher->getUsed());
     }
 
     /**
@@ -48,6 +48,6 @@ class VoucherTest extends TestCase
     {
         $this->expectException(\Vouchers\Exceptions\ImmutableData::class);
         $voucher = new \Vouchers\Voucher();
-        $voucher->set('code', 'Something Else');
+        $voucher->setCode('SOMETHING-ELSE');
     }
 }

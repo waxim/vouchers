@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Vouchers;
 
@@ -46,7 +46,7 @@ class Bag extends Bag\Collection
      *
      * @return void
      */
-    public function fill($number = 0)
+    public function fill($number = 0) :void
     {
         for ($i = 0; $i < $number; $i++) {
             $this->add(new Voucher());
@@ -77,7 +77,7 @@ class Bag extends Bag\Collection
      *
      * @return Voucher $voucher
      */
-    public function pickWithCallback(callable $callback)
+    public function pickWithCallback(callable $callback) :Voucher
     {
         foreach ($this->values as $voucher) {
             if ($callback($voucher)) {
@@ -96,7 +96,7 @@ class Bag extends Bag\Collection
      *
      * @return void
      */
-    public function map(array $data, callable $callback)
+    public function map(array $data, callable $callback) :void
     {
         foreach ($data as $item) {
             $result = $callback($item);
@@ -114,7 +114,7 @@ class Bag extends Bag\Collection
      *
      * @return bool
      */
-    public function pickValid()
+    public function pickValid() :Voucher
     {
         $voucher = null;
         foreach ($this->values as $value) {
@@ -144,7 +144,7 @@ class Bag extends Bag\Collection
      *
      * @return bool
      */
-    public function validate($code)
+    public function validate($code) :bool
     {
         foreach ($this->validators as $rule) {
             $callback = $rule['callback'];
@@ -166,7 +166,7 @@ class Bag extends Bag\Collection
      *
      * @return void
      */
-    public function validator(callable $callback, $message = self::VALIDATION_MESSAGE)
+    public function validator(callable $callback, $message = self::VALIDATION_MESSAGE) :void
     {
         $rule = [
             'message'  => $message,
@@ -182,7 +182,7 @@ class Bag extends Bag\Collection
      *
      * @return void
      */
-    public function add(Voucher $voucher)
+    public function add(Voucher $voucher) :void
     {
         if ($this->model) {
             $this->model->validate($voucher->toArray());
@@ -196,9 +196,9 @@ class Bag extends Bag\Collection
      *
      * @param string $code
      *
-     * @return string|Voucher
+     * @return bool|Voucher
      */
-    public function find($code)
+    public function find($code) :bool|Voucher
     {
         foreach ($this->values as $key => $voucher) {
             if ($code == (string) $voucher) {

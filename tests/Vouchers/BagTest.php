@@ -223,7 +223,7 @@ class BagTest extends TestCase
         $bag->add($voucher);
 
         $test = $bag->pick(function ($voucher) {
-            return $voucher->get('owner') == 'tester';
+            return $voucher->getOwner() == 'tester';
         });
 
         $this->assertSame($test, $voucher);
@@ -245,7 +245,7 @@ class BagTest extends TestCase
         $bag->add($voucher);
 
         $test = $bag->pick(function ($voucher) {
-            return $voucher->get('owner') == 'not a tester';
+            return $voucher->getOwner() == 'not a tester';
         });
 
         $this->assertSame($test, $voucher);
