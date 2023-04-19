@@ -2,9 +2,9 @@
 
 namespace Vouchers\Tests;
 
-use PHPUnit_Framework_TestCase as PHPUnit;
+use PHPUnit\Framework\TestCase;
 
-class VoucherTest extends PHPUnit
+class VoucherTest extends TestCase
 {
     /**
      * Make a voucher.
@@ -21,7 +21,7 @@ class VoucherTest extends PHPUnit
     public function testCanMakeAVoucherAndGenerateCode()
     {
         $voucher = new \Vouchers\Voucher();
-        $this->assertRegExp("/[\w\d]{4}\-[\w\d]{4}\-[\w\d]{4}\-[\w\d]{4}/", (string) $voucher);
+        $this->assertMatchesRegularExpression("/[\w\d]{4}\-[\w\d]{4}\-[\w\d]{4}\-[\w\d]{4}/", (string) $voucher);
     }
 
     /**
@@ -37,8 +37,8 @@ class VoucherTest extends PHPUnit
     public function testDataGetterAndSetter()
     {
         $voucher = new \Vouchers\Voucher();
-        $voucher->set('used', false);
-        $this->assertFalse($voucher->get('used'));
+        $voucher->setUsed(false);
+        $this->assertFalse($voucher->getUsed());
     }
 
     /**
@@ -46,7 +46,8 @@ class VoucherTest extends PHPUnit
      */
     public function testCodeIsImmutable()
     {
+        $this->expectException(\Vouchers\Exceptions\ImmutableData::class);
         $voucher = new \Vouchers\Voucher();
-        $voucher->set('code', 'Something Else');
+        $voucher->setCode('SOMETHING-ELSE');
     }
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Vouchers\Voucher\Code;
 
@@ -18,7 +18,7 @@ class Generator implements GeneratorInterface
      *
      * @return string
      */
-    public function part()
+    public function part() :string
     {
         return bin2hex(openssl_random_pseudo_bytes(2));
     }
@@ -28,7 +28,7 @@ class Generator implements GeneratorInterface
      *
      * @return string
      */
-    public function generate()
+    public function generate() :string
     {
         return strtoupper(sprintf('%s-%s-%s-%s', $this->part(), $this->part(), $this->part(), $this->part()));
     }
@@ -40,7 +40,7 @@ class Generator implements GeneratorInterface
      *
      * @return bool
      */
-    public function validate($code)
+    public function validate(string $code) :bool
     {
         return (bool) preg_match($code, self::REGEX);
     }

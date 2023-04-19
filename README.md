@@ -45,11 +45,16 @@ $voucher = new Voucher(['code' => 'ALAN-COLE-CODE', 'claimed_by' => '', 'claimed
 print $voucher; // "ALAN-COLE-CODE"
 ```
 
-Any value passed on voucher creation can be get and set using `get()` and `set()` on the voucher.
+Any value passed on voucher creation can be get and set using magic getters and setters
 
 ```php
-$voucher->set('owner', 'Alan');
-echo $voucher->get('owner'); // Alan
+$voucher->setOwner('alan')
+echo $voucher->getOwner() // Alan
+
+$voucher->setIsClaimed(true);
+if($voucher->getIsClaimed() === true) {
+    // Sorry dave I can't do that.
+}
 ```
 
 ### Model

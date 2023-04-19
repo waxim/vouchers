@@ -3,6 +3,7 @@
 namespace Vouchers\Voucher;
 
 use Vouchers\Voucher as V;
+use Vouchers\Voucher\Code\GeneratorInterface as Generator;
 
 class Model
 {
@@ -23,7 +24,7 @@ class Model
     /**
      * Custom generator?
      *
-     * @var class
+     * @var Generator
      */
     protected $generator;
 

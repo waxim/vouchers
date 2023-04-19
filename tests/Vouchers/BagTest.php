@@ -2,9 +2,9 @@
 
 namespace Vouchers\Tests;
 
-use PHPUnit_Framework_TestCase as PHPUnit;
+use PHPUnit\Framework\TestCase;
 
-class BagTest extends PHPUnit
+class BagTest extends TestCase
 {
     /**
      * Start a bag.
@@ -106,6 +106,7 @@ class BagTest extends PHPUnit
      */
     public function testCanFailToPickWithValidatorCallback()
     {
+        $this->expectException(\Vouchers\Exceptions\NoValidVouchers::class);
         $bag = new \Vouchers\Bag();
         $bag->fill(100);
 
@@ -147,6 +148,8 @@ class BagTest extends PHPUnit
         $bag->map($vouchers, function ($voucher) {
             return new \Vouchers\Voucher($voucher);
         });
+
+        $this->assertEquals($bag->count(), 4);
     }
 
     /**
@@ -157,6 +160,7 @@ class BagTest extends PHPUnit
      */
     public function testInvalidModelOnBag()
     {
+        $this->expectException(\Vouchers\Exceptions\VoucherValidationFailed::class);
         $model = new \Vouchers\Voucher\Model([
             'name' => [
                 'required'  => true,
@@ -219,7 +223,7 @@ class BagTest extends PHPUnit
         $bag->add($voucher);
 
         $test = $bag->pick(function ($voucher) {
-            return $voucher->get('owner') == 'tester';
+            return $voucher->getOwner() == 'tester';
         });
 
         $this->assertSame($test, $voucher);
@@ -232,6 +236,7 @@ class BagTest extends PHPUnit
      */
     public function testPickWithACallbackFails()
     {
+        $this->expectException(\Vouchers\Exceptions\NoValidVouchers::class);
         $bag = new \Vouchers\Bag();
         $voucher = new \Vouchers\Voucher([
             'code'  => 'MY-Test-code',
@@ -240,7 +245,7 @@ class BagTest extends PHPUnit
         $bag->add($voucher);
 
         $test = $bag->pick(function ($voucher) {
-            return $voucher->get('owner') == 'not a tester';
+            return $voucher->getOwner() == 'not a tester';
         });
 
         $this->assertSame($test, $voucher);

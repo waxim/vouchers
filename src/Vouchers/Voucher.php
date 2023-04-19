@@ -1,6 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Vouchers;
+
+use Vouchers\Voucher\Code\GeneratorInterface;
 
 class Voucher
 {
@@ -55,7 +57,7 @@ class Voucher
      *
      * @return void
      */
-    private function parseData(array $data = [], Voucher\Model $model = null)
+    private function parseData(array $data = [], Voucher\Model $model = null) :void
     {
         // Validate Model
         if ($model) {
@@ -73,7 +75,7 @@ class Voucher
      *
      * @return void
      */
-    private function setArrayAsData(array $data)
+    private function setArrayAsData(array $data) :void
     {
         $this->data = array_merge($data, $this->data);
     }
@@ -83,7 +85,7 @@ class Voucher
      *
      * @return void
      */
-    private function generateVoucherCodeIfEmpty()
+    private function generateVoucherCodeIfEmpty() :void
     {
         $this->data[self::VOUCHER_CODE_KEY] = isset($this->data[self::VOUCHER_CODE_KEY]) ?
             $this->data[self::VOUCHER_CODE_KEY] :
@@ -98,7 +100,7 @@ class Voucher
      *
      * @return void
      */
-    private function processDataWithModel(array $data, Voucher\Model $model)
+    private function processDataWithModel(array $data, Voucher\Model $model) :void
     {
         $model->validate($data);
         $this->data = array_merge($this->data, $data);
@@ -124,7 +126,7 @@ class Voucher
      *
      * @return string
      */
-    public function generate()
+    public function generate() :string
     {
         $generator = new $this->generator();
 
@@ -138,7 +140,7 @@ class Voucher
      *
      * @return mixed
      */
-    public function get($key)
+    public function get($key) :?string
     {
         return array_key_exists($key, $this->data) ? $this->data[$key] : null;
     }
@@ -151,7 +153,7 @@ class Voucher
      *
      * @return mixed $value
      */
-    public function set($key, $value)
+    public function set($key, $value) :?string
     {
         if (in_array($key, $this->immutable)) {
             throw new \Vouchers\Exceptions\ImmutableData();
@@ -165,9 +167,9 @@ class Voucher
     /**
      * Static function to get generator class.
      *
-     * @return string
+     * @return GeneratorInterface
      */
-    public function getGenerator()
+    public function getGenerator() :GeneratorInterface
     {
         return $this->generator;
     }
@@ -179,7 +181,7 @@ class Voucher
      *
      * @return void
      */
-    public function addImmutableKey($key)
+    public function addImmutableKey($key) :void
     {
         array_push($this->immutable, $key);
     }
@@ -189,7 +191,7 @@ class Voucher
      *
      * @return string
      */
-    public function __toString()
+    public function __toString() :string
     {
         return $this->data[self::VOUCHER_CODE_KEY];
     }
@@ -199,8 +201,57 @@ class Voucher
      *
      * @return array
      */
-    public function toArray()
+    public function toArray() :array
     {
         return $this->data;
+    }
+
+    /**
+     * Add a magic call to get and set.
+     * 
+     * @param string $method
+     * @param array  $args
+     * 
+     * @return mixed
+     */
+    public function __call($method, $args)
+    {
+        # if we start with get
+        if (substr($method, 0, 3) == 'get') {
+            $key = lcfirst(substr($method, 3));
+
+            # split the key at its capital letters
+            $key = preg_split('/(?=[a-Z])/', $key);
+            
+            # join the key with underscores
+            $key_string = "";
+            foreach($key as $k => $v) {
+                $key_string .= $v;
+                if($k < count($key) - 1) {
+                    $key_string .= "_";
+                }
+            }
+
+            return $this->get($key_string);
+        } 
+
+        # if we start with set
+        if (substr($method, 0, 3) == 'set') {
+            $key = lcfirst(substr($method, 3));
+
+            # split the key at its capital letters
+            $key = preg_split('/(?=[a-Z])/', $key);
+
+            # join the key with underscores
+            $key_string = "";
+            foreach ($key as $k => $v) {
+                $key_string .= $v;
+                if ($k < count($key) - 1) {
+                    $key_string .= "_";
+                }
+            }
+
+            return $this->set($key_string, $args[0]);
+        }
     }
 }

@@ -1,8 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Vouchers\Bag;
 
-class Collection implements \Iterator
+use Iterator;
+
+class Collection implements Iterator
 {
     /**
      * Holds all of our 'vouchers'.
@@ -16,7 +18,7 @@ class Collection implements \Iterator
      *
      * @return mixed
      */
-    public function current()
+    public function current() :mixed
     {
         return current($this->values);
     }
@@ -24,7 +26,7 @@ class Collection implements \Iterator
     /**
      * Returns the key of our current.
      */
-    public function key()
+    public function key() :mixed
     {
         return key($this->values);
     }
@@ -32,7 +34,7 @@ class Collection implements \Iterator
     /**
      * Moves array to next array item.
      */
-    public function next()
+    public function next() :void
     {
         return next($this->values);
     }
@@ -40,7 +42,7 @@ class Collection implements \Iterator
     /**
      * Reset the array.
      */
-    public function rewind()
+    public function rewind() :void
     {
         return reset($this->values);
     }
@@ -50,7 +52,7 @@ class Collection implements \Iterator
      *
      * @return int
      */
-    public function count()
+    public function count() :int
     {
         return count($this->values);
     }
@@ -59,7 +61,7 @@ class Collection implements \Iterator
      * Make sure the key is a real one
      * or loops will last forever.
      */
-    public function valid()
+    public function valid() :bool
     {
         $key = key($this->values);
 
@@ -71,7 +73,7 @@ class Collection implements \Iterator
      *
      * @return array
      */
-    public function toArray()
+    public function toArray() :array
     {
         $collection = [];
         foreach ($this->values as $value) {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Vouchers\Voucher\Code;
 
@@ -9,7 +9,7 @@ interface GeneratorInterface
      *
      * @return string
      */
-    public function generate();
+    public function generate() :string;
 
     /**
      * Validate a voucher code.
@@ -18,5 +18,5 @@ interface GeneratorInterface
      *
      * @return bool
      */
-    public function validate($code);
+    public function validate(string $code) :bool;
 }
