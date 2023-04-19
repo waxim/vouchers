@@ -2,7 +2,9 @@
 
 namespace Vouchers\Bag;
 
-class Collection implements \Iterator
+use Iterator;
+
+class Collection implements Iterator
 {
     /**
      * Holds all of our 'vouchers'.
